@@ -1,1 +1,10 @@
 theme: minima
+title: Quite Random
+description: My place for musings & explorations
+
+header_pages:
+  - about.md
+  - apps.md
+  - books.md
+
+# You can add more configuration options here as needed
