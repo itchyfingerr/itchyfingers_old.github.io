@@ -3,14 +3,13 @@ layout: home
 title: Home
 ---
 
-# Welcome to Quite Random
+# Welcome to Quite Random 🎲
 
-My place for musings & explorations
+_Exploring random ideas in my mind_
 
-## Recent posts
 
-Here are some articles and posts I've written...
+## 🚀 Latest Adventures
 
-## Apps
-
-Quick & dirty web apps built using AI & Streamlit
+- [**AI-Powered Storytelling**](#) - How machine learning is reshaping narrative creation
+- [**The Art of Digital Minimalism**](#) - Finding balance in a hyperconnected world
+- [**Quantum Computing for Beginners**](#) - Demystifying the next frontier in computation
