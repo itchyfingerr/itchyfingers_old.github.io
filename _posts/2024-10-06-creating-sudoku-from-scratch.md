@@ -1,5 +1,3 @@
-## Sudoku generator in Python
-
 ### Basic idea
 I want to write a program that can generate sudoko puzzles for me. While there are ready made packages out there, I want to solve this problem on my own and build something from scratch. My idea is to first build a 100% solved Sudoku and then randomly hide some cells to create the final puzzle.
 
@@ -30,6 +28,8 @@ The last two should be satisfied because I am explicity coding for it, so the on
 2. Stack these matrices into a 9X9 grid to get the final matrix.
 3. Check the validity by doing a row-wise & column-wise sum to ensure they all sum to 45.
 
+<details>
+<summary>Click to view Python code</summary>
 
 ```python
 import pandas as pd
@@ -38,10 +38,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import random
 import plotly.express as px
-```
 
-
-```python
 d = [1,2,3,4,5,6,7,8,9]
 valid = []
 
@@ -66,13 +63,9 @@ for i in range(10000000):
     else:
         valid.append(0)
 
-
-```
-
-
-```python
 sum(valid)
 ```
+</details>
 
 
 
@@ -101,6 +94,8 @@ The other matrix will be build based on this to ensure no row-wise or column-wis
 |(0,0)|(0,1)|(0,2)|
 |(1,0)|(1,1)|(1,2)|
 
+<details>
+<summary>Click to view Python code</summary>
 
 ```python
 y1 = np.random.choice(d,size=(3,3),replace=False) #Initial random matrix
@@ -145,9 +140,12 @@ m = np.vstack([m1,m2,m3])
 
 (all(m.sum(axis=0) == 45) and all(m.sum(axis=1) ==45))
 ```
+</details>
 
 So the above approach works always because all the new matrices are derived from the first matrix. However, it does not look very elegant, so I used Claude Sonnet 3.5 to look for an elegant solution and it found it. I learned that numpy already has functions to do such operations.
 
+<details>
+<summary>Click to view Python code</summary>
 
 ```python
 import numpy as np
@@ -192,15 +190,19 @@ m = np.vstack([m1,m2,m3])
 
 
 
+
     True
 
 
+</details>
 
 ### Making the actual Sudoku
 
 So that works, now I can just randomly erase some elements from each matrix to get a complete Sudoku puzzle. There are some other things which I have not considered, for example - is this the only way? does the sudoku have an unique solution etc? This can be a subject of another post.
 
 
+<details>
+<summary>Click to view Python code</summary>
 
 ```python
 # Create a copy of the solution
@@ -213,9 +215,11 @@ np.random.shuffle(indices)
 for i in indices[:num_to_remove]:
     m[i // 9, i % 9] = 0  # Use 0 to represent empty cells
 ```
+</details>
+
 ### Interactive Demo
 
-I've implemented an interactive version of this Sudoku generator using JavaScript. You can try it out below:
+I've implemented an interactive version of this Sudoku generator using JavaScript. You can try it out below, given the logic of creation, it should be easy to solve.
 
 <iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="600px" frameborder="0"></iframe>
 

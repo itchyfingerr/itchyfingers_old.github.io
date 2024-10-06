@@ -42,7 +42,7 @@ function generateSudoku() {
     return m;
 }
 
-function createPuzzle(solution, numToRemove = 40) {
+function createPuzzle(solution, numToRemove = 55) {
     const puzzle = solution.map(row => [...row]);
     const indices = shuffleArray(range(0, 80, 1));
     
