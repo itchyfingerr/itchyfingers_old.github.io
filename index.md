@@ -8,4 +8,3 @@ title: Home
 _Exploring random ideas in my mind_
 
 
-
