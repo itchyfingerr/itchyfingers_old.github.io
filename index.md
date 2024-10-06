@@ -10,6 +10,6 @@ _Exploring random ideas in my mind_
 
 ## 🚀 Latest Adventures
 
-- [**AI-Powered Storytelling**](#) - How machine learning is reshaping narrative creation
-- [**The Art of Digital Minimalism**](#) - Finding balance in a hyperconnected world
-- [**Quantum Computing for Beginners**](#) - Demystifying the next frontier in computation
+- [**Sudoku Generator in Python**]({% post_url 2024-10-06-sudoku-generator %}) - A deep dive into creating Sudoku puzzles using Python and JavaScript.
+- [**Population Simulator**](#) - How fertility rate changes impact the size of future generations
+
