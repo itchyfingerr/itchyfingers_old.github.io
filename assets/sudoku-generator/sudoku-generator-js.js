@@ -4,42 +4,58 @@ const range = (start, stop, step) => Array.from({ length: (stop - start) / step 
 function generateSudoku() {
     const d = range(1, 9, 1);
     
-    // Create initial random 3x3 matrix
-    const y1 = shuffleArray(d).reduce((acc, curr, idx) => {
-        acc[Math.floor(idx / 3)][idx % 3] = curr;
-        return acc;
-    }, Array(3).fill().map(() => Array(3).fill(0)));
+    function sudokuGen(rowPerm1 = [2, 0, 1], rowPerm2 = [1, 2, 0]) {
+        // Create initial random 3x3 matrix
+        const y1 = shuffleArray([...d]).reduce((acc, curr, idx) => {
+            acc[Math.floor(idx / 3)][idx % 3] = curr;
+            return acc;
+        }, Array(3).fill().map(() => Array(3).fill(0)));
 
-    // Define row permutations
-    const rowPerm1 = [2, 0, 1];
-    const rowPerm2 = [1, 2, 0];
+        // Generate y2 and y3 by row permutations of y1
+        const y2 = rowPerm1.map(i => y1[i]);
+        const y3 = rowPerm2.map(i => y1[i]);
 
-    // Generate y2 and y3 by row permutations of y1
-    const y2 = rowPerm1.map(i => y1[i]);
-    const y3 = rowPerm2.map(i => y1[i]);
+        // Generate y4 by column rotation of y1
+        const y4 = y1.map(row => [...row.slice(1), row[0]]);
 
-    // Generate y4 by column rotation of y1
-    const y4 = y1.map(row => [...row.slice(-1), ...row.slice(0, -1)]);
+        // Generate y5 and y6 by row permutations of y4
+        const y5 = rowPerm1.map(i => y4[i]);
+        const y6 = rowPerm2.map(i => y4[i]);
 
-    // Generate y5 and y6 by row permutations of y4
-    const y5 = rowPerm1.map(i => y4[i]);
-    const y6 = rowPerm2.map(i => y4[i]);
+        // Generate y7 by column rotation of y4
+        const y7 = y4.map(row => [...row.slice(1), row[0]]);
 
-    // Generate y7 by column rotation of y4
-    const y7 = y4.map(row => [...row.slice(-1), ...row.slice(0, -1)]);
+        // Generate y8 and y9 by row permutations of y7
+        const y8 = rowPerm1.map(i => y7[i]);
+        const y9 = rowPerm2.map(i => y7[i]);
 
-    // Generate y8 and y9 by row permutations of y7
-    const y8 = rowPerm1.map(i => y7[i]);
-    const y9 = rowPerm2.map(i => y7[i]);
+        const row1 = [y1, y2, y3];
+        const row2 = [y4, y5, y6];
+        const row3 = [y7, y8, y9];
 
-    // Combine all matrices
-    const m = [
-        ...combineRows(y1, y2, y3),
-        ...combineRows(y4, y5, y6),
-        ...combineRows(y7, y8, y9)
-    ];
+        // Combine rows
+        const m1 = combineRows(...row1);
+        const m2 = combineRows(...row2);
+        const m3 = combineRows(...row3);
 
-    return m;
+        const cols = [m1, m2, m3];
+
+        // Stack vertically
+        let m = cols.reduce((acc, col) => [...acc, ...col], []);
+
+        // Randomizing the columns & rows to remove the obvious patterns
+        // Shuffle rows
+        m = shuffleArray([...m]);
+
+        // Shuffle columns
+        m = transposeMatrix(m);
+        m = shuffleArray([...m]);
+        m = transposeMatrix(m);
+
+        return m;
+    }
+
+    return sudokuGen();
 }
 
 function createPuzzle(solution, numToRemove = 55) {
@@ -69,12 +85,17 @@ function combineRows(...matrices) {
     );
 }
 
+function transposeMatrix(matrix) {
+    return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+}
+
 // Generate a new Sudoku puzzle
 function newPuzzle() {
     const solution = generateSudoku();
     const puzzle = createPuzzle(solution);
     return { puzzle, solution };
 }
+
 
 // ... [Keep all the existing code from sudoku-generator-js.js] ...
 

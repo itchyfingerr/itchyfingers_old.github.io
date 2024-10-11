@@ -1,3 +1,5 @@
+## Sudoku generator in Python
+
 ### Basic idea
 I want to write a program that can generate sudoko puzzles for me. While there are ready made packages out there, I want to solve this problem on my own and build something from scratch. My idea is to first build a 100% solved Sudoku and then randomly hide some cells to create the final puzzle.
 
@@ -29,7 +31,7 @@ The last two should be satisfied because I am explicity coding for it, so the on
 3. Check the validity by doing a row-wise & column-wise sum to ensure they all sum to 45.
 
 <details>
-<summary>Click to view Python code</summary>
+  <summary>Click to expand!</summary>
 
 ```python
 import pandas as pd
@@ -63,9 +65,11 @@ for i in range(10000000):
     else:
         valid.append(0)
 
+
 sum(valid)
 ```
 </details>
+
 
 
 
@@ -95,7 +99,7 @@ The other matrix will be build based on this to ensure no row-wise or column-wis
 |(1,0)|(1,1)|(1,2)|
 
 <details>
-<summary>Click to view Python code</summary>
+  <summary>Click to expand!</summary>
 
 ```python
 y1 = np.random.choice(d,size=(3,3),replace=False) #Initial random matrix
@@ -142,51 +146,6 @@ m = np.vstack([m1,m2,m3])
 ```
 </details>
 
-So the above approach works always because all the new matrices are derived from the first matrix. However, it does not look very elegant, so I used Claude Sonnet 3.5 to look for an elegant solution and it found it. I learned that numpy already has functions to do such operations.
-
-<details>
-<summary>Click to view Python code</summary>
-
-```python
-import numpy as np
-
-d = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-# Create initial random 3x3 matrix
-y1 = np.random.choice(d, size=(3,3), replace=False)
-
-# Define row permutations
-row_perm1 = [2, 0, 1]
-row_perm2 = [1, 2, 0]
-
-# Generate y2 and y3 by row permutations of y1
-y2 = y1[row_perm1]
-y3 = y1[row_perm2]
-
-# Generate y4 by column rotation of y1
-y4 = np.roll(y1, -1, axis=1)
-
-# Generate y5 and y6 by row permutations of y4
-y5 = y4[row_perm1]
-y6 = y4[row_perm2]
-
-# Generate y7 by column rotation of y4
-y7 = np.roll(y4, -1, axis=1)
-
-# Generate y8 and y9 by row permutations of y7
-y8 = y7[row_perm1]
-y9 = y7[row_perm2]
-
-m1 = np.hstack([y1,y2,y3])
-m2 = np.hstack([y4,y5,y6])
-m3 = np.hstack([y7,y8,y9])
-
-m = np.vstack([m1,m2,m3])
-
-(all(m.sum(axis=0) == 45) and all(m.sum(axis=1) ==45))
-
-```
-
 
 
 
@@ -194,15 +153,107 @@ m = np.vstack([m1,m2,m3])
     True
 
 
+
+So the above approach works always because all the new matrices are derived from the first matrix. However, it does not look very elegant, so I used Claude Sonnet 3.5 to look for an elegant solution and it found one. I learned that numpy already has functions to do such operations.
+
+Additionally, I realized that after I generate the initial 9x9 matrix, I can just shuffle the rows & columns to remove the fixed patterns that generated in the first place. 
+
+<details>
+  <summary>Click to expand!</summary>
+
+```python
+import numpy as np
+
+d = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+def sudoku_gen(row_perm1 = [2,0,1], row_perm2 = [1,2,0]):
+
+
+    # Create initial random 3x3 matrix
+    y1 = np.random.choice(d, size=(3,3), replace=False)
+
+    # Define row permutations
+    # row_perm1 = [2, 0, 1]
+    # row_perm2 = [1, 2, 0]
+
+    # Generate y2 and y3 by row permutations of y1
+    y2 = y1[row_perm1]
+    y3 = y1[row_perm2]
+
+    # Generate y4 by column rotation of y1
+    y4 = np.roll(y1, -1, axis=1)
+
+    # Generate y5 and y6 by row permutations of y4
+    y5 = y4[row_perm1]
+    y6 = y4[row_perm2]
+
+    # Generate y7 by column rotation of y4
+    y7 = np.roll(y4, -1, axis=1)
+
+    # Generate y8 and y9 by row permutations of y7
+    y8 = y7[row_perm1]
+    y9 = y7[row_perm2]
+    
+    row_1 = [y1, y2, y3]
+    row_2 = [y4, y5, y6]
+    row_3 = [y7, y8, y9]
+    
+    indices = np.random.choice(len(row_1), size=3, replace=False)
+
+    m1 = np.hstack(row_1)
+    m2 = np.hstack(row_2)
+    m3 = np.hstack(row_3)
+
+    cols = [m1, m2, m3]
+
+    col_indices = np.random.choice(len(cols), size=3, replace=False)
+
+    #m = np.vstack([cols[i] for i in col_indices])
+    m = np.vstack(cols)
+
+    #Randomizing the columns & rows to remove the obvious patterns
+    
+    # Shuffle rows
+    np.random.shuffle(m)
+    
+    # Shuffle columns
+    m = m.T
+    np.random.shuffle(m)
+    m = m.T
+    
+    return m
+
+
+```
 </details>
+
+To be sure that the generated Sudoku is valid, I can run a random simulation of 10K sudoku and check their validity.
+
+
+```python
+valid = []
+for i in range(10000):
+    m = sudoku_gen()
+    if (all(m.sum(axis=0) == 45) and all(m.sum(axis=1) ==45)):
+        valid.append(1)
+    else:
+        valid.append(0)
+sum(valid)
+```
+
+
+
+
+    10000
+
+
 
 ### Making the actual Sudoku
 
 So that works, now I can just randomly erase some elements from each matrix to get a complete Sudoku puzzle. There are some other things which I have not considered, for example - is this the only way? does the sudoku have an unique solution etc? This can be a subject of another post.
 
-
 <details>
-<summary>Click to view Python code</summary>
+  <summary>Click to expand!</summary>
 
 ```python
 # Create a copy of the solution
@@ -215,12 +266,12 @@ np.random.shuffle(indices)
 for i in indices[:num_to_remove]:
     m[i // 9, i % 9] = 0  # Use 0 to represent empty cells
 ```
+
 </details>
 
 ### Interactive Demo
 
-I've implemented an interactive version of this Sudoku generator using JavaScript. You can try it out below, given the logic of creation, it should be easy to solve.
+I got Claude to convert my python code to javascript that can be embedded right here in my markdown file using an iframe and I can actually generate & play.
 
-<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="600px" frameborder="0"></iframe>
+<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="400px" frameborder="0"></iframe>
 
-Feel free to generate new puzzles and solve them right here on the page!
