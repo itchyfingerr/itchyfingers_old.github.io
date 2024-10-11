@@ -273,5 +273,5 @@ for i in indices[:num_to_remove]:
 
 I got Claude to convert my python code to javascript that can be embedded right here in my markdown file using an iframe and I can actually generate & play.
 
-<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="400px" frameborder="0"></iframe>
+<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="600px" frameborder="0"></iframe>
 

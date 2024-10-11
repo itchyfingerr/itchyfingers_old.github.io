@@ -58,7 +58,7 @@ function generateSudoku() {
     return sudokuGen();
 }
 
-function createPuzzle(solution, numToRemove = 55) {
+function createPuzzle(solution, numToRemove = 40) {
     const puzzle = solution.map(row => [...row]);
     const indices = shuffleArray(range(0, 80, 1));
     
