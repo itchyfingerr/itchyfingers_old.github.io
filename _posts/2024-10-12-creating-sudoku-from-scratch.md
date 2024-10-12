@@ -158,7 +158,9 @@ So the above approach works always because all the new matrices are derived from
 What happens if I just shuffle the rows & columns to remove the fixed patterns? This approch randomizes the overall Sudoku but it violates the third condition of a valid Sudoku i.e. each 3X3 block should also add up exactly to 45. This what I observe below.
 
 <details>
-  <summary>Click to expand!</summary>
+
+<summary>Click to expand!</summary>
+
 
 ```python
 import numpy as np
@@ -220,6 +222,7 @@ def sudoku_gen(row_perm1 = [2,0,1], row_perm2 = [1,2,0]):
 
 
 ```
+
 </details>
 
 ```python
@@ -248,7 +251,9 @@ I ended reading bunch of articles about Sudoku solving & generating. Contrary to
 #### Starter matrix
 
 <details>
-  <summary>Click to expand!</summary>
+
+<summary>Click to expand!</summary>
+
 
 ```python
 
@@ -278,6 +283,7 @@ def start_mat():
     s = np.vstack(cols)
     return s
 ```
+
 </details>
 
 
