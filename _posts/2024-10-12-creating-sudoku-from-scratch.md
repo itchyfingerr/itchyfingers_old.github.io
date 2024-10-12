@@ -378,23 +378,21 @@ indices = np.arange(81)
 np.random.shuffle(indices)
 for i in indices[:num_to_remove]:
     s[i // 9, i % 9] = 0  # Use 0 to represent empty cells
-print(np.matrix(s))
 ```
 
-   [[0 0 0 0 0 0 8 0 0]
-    [0 0 0 0 0 0 0 0 0]
-    [0 8 0 0 5 0 0 0 0]
-    [3 0 8 9 0 0 0 5 2]
-    [0 0 7 0 0 0 9 8 0]
-    [0 0 4 0 0 0 0 0 0]
-    [0 0 0 0 0 0 0 0 0]
-    [0 0 3 0 0 0 0 0 0]
-    [6 0 0 0 8 1 4 7 0]]   
+    Sudoku Puzzle:
+    ┌───────┬───────┬───────┐
+    │ 5 . . │ . . . │ . . 2 │
+    │ . . . │ . 9 . │ . . . │
+    │ . . . │ . . . │ . . . │
+    ├───────┼───────┼───────┤
+    │ . . . │ . . . │ 4 2 3 │
+    │ . . 6 │ 8 . . │ . 9 . │
+    │ . . . │ 9 . 4 │ . 5 . │
+    ├───────┼───────┼───────┤
+    │ 9 . 1 │ . . . │ . . 4 │
+    │ . 8 7 │ . 1 . │ 6 3 5 │
+    │ 3 . 5 │ 2 . . │ . 7 9 │
+    └───────┴───────┴───────┘ 
 
 
-
-### Interactive Demo
-
-I got Claude to convert my python code to javascript that can be embedded right here in my markdown file using an iframe and I can actually generate.
-
-<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="600px" frameborder="0"></iframe>
