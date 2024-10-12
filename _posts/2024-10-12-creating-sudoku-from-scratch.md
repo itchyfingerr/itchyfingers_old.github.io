@@ -30,6 +30,8 @@ The last two should be satisfied because I am explicity coding for it, so the on
 2. Stack these matrices into a 9X9 grid to get the final matrix.
 3. Check the validity by doing a row-wise & column-wise sum to ensure they all sum to 45.
 
+<details>
+  <summary>Click to expand!</summary>
 
 ```python
 import pandas as pd
@@ -37,11 +39,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import random
-import plotly.express as px
-```
 
-
-```python
 d = [1,2,3,4,5,6,7,8,9]
 valid = []
 
@@ -68,17 +66,7 @@ for i in range(10000000):
 
 
 ```
-
-
-```python
-sum(valid)
-```
-
-
-
-
-    0
-
+</details>
 
 
 After 10M iterations of the above approach, I don't get a single valid Sudoku. I expected to get a lot of invalid Sudokus but I didn't expect the chances to be this low, it's almost null. I need to think of another approach.
@@ -101,6 +89,8 @@ The other matrix will be build based on this to ensure no row-wise or column-wis
 |(0,0)|(0,1)|(0,2)|
 |(1,0)|(1,1)|(1,2)|
 
+<details>
+  <summary>Click to expand!</summary>
 
 ```python
 y1 = np.random.choice(d,size=(3,3),replace=False) #Initial random matrix
@@ -143,15 +133,9 @@ m3 = np.hstack([y7,y8,y9])
 
 m = np.vstack([m1,m2,m3])
 
-(all(m.sum(axis=0) == 45) and all(m.sum(axis=1) ==45))
+
 ```
-
-
-
-
-    True
-
-
+<details>
 
 
 ```python
@@ -173,6 +157,8 @@ So the above approach works always because all the new matrices are derived from
 
 What happens if I just shuffle the rows & columns to remove the fixed patterns? This approch randomizes the overall Sudoku but it violates the third condition of a valid Sudoku i.e. each 3X3 block should also add up exactly to 45. This what I observe below.
 
+<details>
+  <summary>Click to expand!</summary>
 
 ```python
 import numpy as np
@@ -234,7 +220,7 @@ def sudoku_gen(row_perm1 = [2,0,1], row_perm2 = [1,2,0]):
 
 
 ```
-
+</details>
 
 ```python
 sudoku_gen()
@@ -261,6 +247,8 @@ I ended reading bunch of articles about Sudoku solving & generating. Contrary to
 
 #### Starter matrix
 
+<details>
+  <summary>Click to expand!</summary>
 
 ```python
 
@@ -290,15 +278,11 @@ def start_mat():
     s = np.vstack(cols)
     return s
 ```
+</details>
 
 
 ```python
-s = np.array(start_mat())
-```
-
-
-```python
-s
+np.array(start_mat())
 ```
 
 
@@ -379,13 +363,6 @@ solve(s)
      [6 5 2 3 8 1 4 7 9]]
 
 
-
-
-
-    True
-
-
-
 ### Making the actual Sudoku
 
 So that works, now I can just randomly erase some elements from each matrix to get a complete Sudoku puzzle. There are some other things which I have not considered, for example - is this the only way? does the sudoku have an unique solution etc? 
@@ -404,13 +381,20 @@ for i in indices[:num_to_remove]:
 print(np.matrix(s))
 ```
 
-    [[6 9 0 0 0 0 0 0 0]
-     [0 0 0 0 0 0 0 0 0]
-     [3 0 8 0 0 0 0 0 0]
-     [0 0 0 0 7 0 0 0 0]
-     [0 0 0 5 4 0 0 0 0]
-     [0 0 0 6 0 9 0 0 0]
-     [0 0 0 0 0 0 0 0 0]
-     [0 0 0 0 0 0 0 0 0]
-     [0 0 0 0 0 0 0 0 8]]
+   [[0 0 0 0 0 0 8 0 0]
+    [0 0 0 0 0 0 0 0 0]
+    [0 8 0 0 5 0 0 0 0]
+    [3 0 8 9 0 0 0 5 2]
+    [0 0 7 0 0 0 9 8 0]
+    [0 0 4 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0]
+    [0 0 3 0 0 0 0 0 0]
+    [6 0 0 0 8 1 4 7 0]]   
 
+
+
+### Interactive Demo
+
+I got Claude to convert my python code to javascript that can be embedded right here in my markdown file using an iframe and I can actually generate.
+
+<iframe src="/assets/sudoku-generator/sudoku-html.html" width="100%" height="600px" frameborder="0"></iframe>
