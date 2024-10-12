@@ -135,7 +135,7 @@ m = np.vstack([m1,m2,m3])
 
 
 ```
-<details>
+</details>
 
 
 ```python
