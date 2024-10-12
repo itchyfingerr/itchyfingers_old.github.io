@@ -1,105 +1,75 @@
-// Utility function to create a range array
-const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
-
-function generateSudoku() {
-    const d = range(1, 9, 1);
+// Sudoku functions (converted from Python)
+function startMat() {
+    const d = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
     
-    function sudokuGen(rowPerm1 = [2, 0, 1], rowPerm2 = [1, 2, 0]) {
-        // Create initial random 3x3 matrix
-        const y1 = shuffleArray([...d]).reduce((acc, curr, idx) => {
-            acc[Math.floor(idx / 3)][idx % 3] = curr;
-            return acc;
-        }, Array(3).fill().map(() => Array(3).fill(0)));
-
-        // Generate y2 and y3 by row permutations of y1
-        const y2 = rowPerm1.map(i => y1[i]);
-        const y3 = rowPerm2.map(i => y1[i]);
-
-        // Generate y4 by column rotation of y1
-        const y4 = y1.map(row => [...row.slice(1), row[0]]);
-
-        // Generate y5 and y6 by row permutations of y4
-        const y5 = rowPerm1.map(i => y4[i]);
-        const y6 = rowPerm2.map(i => y4[i]);
-
-        // Generate y7 by column rotation of y4
-        const y7 = y4.map(row => [...row.slice(1), row[0]]);
-
-        // Generate y8 and y9 by row permutations of y7
-        const y8 = rowPerm1.map(i => y7[i]);
-        const y9 = rowPerm2.map(i => y7[i]);
-
-        const row1 = [y1, y2, y3];
-        const row2 = [y4, y5, y6];
-        const row3 = [y7, y8, y9];
-
-        // Combine rows
-        const m1 = combineRows(...row1);
-        const m2 = combineRows(...row2);
-        const m3 = combineRows(...row3);
-
-        const cols = [m1, m2, m3];
-
-        // Stack vertically
-        let m = cols.reduce((acc, col) => [...acc, ...col], []);
-
-        // Randomizing the columns & rows to remove the obvious patterns
-        // Shuffle rows
-        m = shuffleArray([...m]);
-
-        // Shuffle columns
-        m = transposeMatrix(m);
-        m = shuffleArray([...m]);
-        m = transposeMatrix(m);
-
-        return m;
-    }
-
-    return sudokuGen();
-}
-
-function createPuzzle(solution, numToRemove = 40) {
-    const puzzle = solution.map(row => [...row]);
-    const indices = shuffleArray(range(0, 80, 1));
+    const y1 = Array(3).fill().map(() => shuffle(d).slice(0, 3));
+    const y5 = Array(3).fill().map(() => shuffle(d).slice(0, 3));
+    const y9 = Array(3).fill().map(() => shuffle(d).slice(0, 3));
     
-    for (let i = 0; i < numToRemove; i++) {
-        const idx = indices[i];
-        puzzle[Math.floor(idx / 9)][idx % 9] = 0;
+    const emptyBlock = () => Array(3).fill().map(() => Array(3).fill(0));
+    const y2 = emptyBlock(), y3 = emptyBlock(), y4 = emptyBlock(),
+          y6 = emptyBlock(), y7 = emptyBlock(), y8 = emptyBlock();
+    
+    const s = [
+        ...y1.map((row, i) => [...row, ...y2[i], ...y3[i]]),
+        ...y4.map((row, i) => [...row, ...y5[i], ...y6[i]]),
+        ...y7.map((row, i) => [...row, ...y8[i], ...y9[i]])
+    ];
+    
+    return s;
+}
+
+function possible(y, x, n, s) {
+    for (let i = 0; i < 9; i++) {
+        if (s[y][i] === n || s[i][x] === n) return false;
+    }
+    const x0 = Math.floor(x / 3) * 3;
+    const y0 = Math.floor(y / 3) * 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (s[y0 + i][x0 + j] === n) return false;
+        }
+    }
+    return true;
+}
+
+function solve(s) {
+    for (let y = 0; y < 9; y++) {
+        for (let x = 0; x < 9; x++) {
+            if (s[y][x] === 0) {
+                for (let n = 1; n <= 9; n++) {
+                    if (possible(y, x, n, s)) {
+                        s[y][x] = n;
+                        if (solve(s)) return true;
+                        s[y][x] = 0;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function generatePuzzle() {
+    const fullSolution = startMat();
+    solve(fullSolution);
+    
+    const puzzle = fullSolution.map(row => [...row]);
+    const cellsToRemove = 40; // Adjust this for difficulty
+    
+    for (let i = 0; i < cellsToRemove; i++) {
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * 9);
+            y = Math.floor(Math.random() * 9);
+        } while (puzzle[y][x] === 0);
+        puzzle[y][x] = 0;
     }
     
-    return puzzle;
+    return { puzzle, solution: fullSolution };
 }
-
-// Helper functions
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function combineRows(...matrices) {
-    return matrices[0].map((_, rowIndex) => 
-        matrices.reduce((acc, matrix) => [...acc, ...matrix[rowIndex]], [])
-    );
-}
-
-function transposeMatrix(matrix) {
-    return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
-}
-
-// Generate a new Sudoku puzzle
-function newPuzzle() {
-    const solution = generateSudoku();
-    const puzzle = createPuzzle(solution);
-    return { puzzle, solution };
-}
-
-
-// ... [Keep all the existing code from sudoku-generator-js.js] ...
-
-// Add the following code at the end of the file:
 
 document.addEventListener('DOMContentLoaded', () => {
     const gridElement = document.getElementById('sudoku-grid');
@@ -130,8 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateNewPuzzle() {
-        console.log('Generating new puzzle...'); // Debug log
-        const { puzzle, solution } = newPuzzle();
+        const { puzzle, solution } = generatePuzzle();
         currentPuzzle = puzzle;
         currentSolution = solution;
         displayPuzzle(currentPuzzle);
