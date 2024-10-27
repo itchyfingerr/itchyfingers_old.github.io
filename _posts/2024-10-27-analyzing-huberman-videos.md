@@ -43,28 +43,28 @@ I downloaded the data for all the videos on the channel till data. Based on basi
 
 I want to see how the views of the channel have evolved over time. First I will see cumulative views overtime, I will also just focus on long form content and exclude any videso under 3 mins. Looking at the chart below, there is some flatness from start of 2024 right after the 300MM cumulative videos.
 
-![Cumulative Views over time](/cumulative_views.png)
+![Cumulative Views over time](/assets/images/huberman/cumulative_views.png)
 
 I want to see how the trend looks if we see views per video by year. If there is a slow-down in the views, it might show up here. 
 
-![Views per video](/views_per_video.png)
+![Views per video](/assets/images/huberman/views_per_video.png)
 
 From the above chart, it looks like the 2024 videos are getting lower views than previous years. I think this is because Huberman has already exhausted all the hot topics in the health space, so his recent videos are going towards more niche topics. I also noticed that he deviating from the core health space and getting into some areas which are not yet established. This makes sense to me because the research in health space progresses at a slower pace compared to his ability to make new videos. Another factor could be that he simply publishes less videos or his videos are less engaging so he is not getting the 'love' from YT's algorithms.
 
-![Videos per month](/videos_per_month.png)
+![Videos per month](/assets/images/huberman/videos_per_month.png)
 
 There isn't a marked change in his video production in 2024, it is similar to previous years, except April 2024 where it is 11. Even if I exclude AMA & live-event, it is still about 8. So video production is not a reason. Next, I want to look at engagement as measured by likes per video & comments per video. My hypothesis is that the videos which are liked a lot & commented on tend to be boosted by YT's algorithm so they have a higher change of going viral and getting more views.
     
-![png](/youtube_data_20_1.png)
+![png](/assets/images/huberman/youtube_data_20_1.png)
 
 There is a strong positive correlation between views per video (v_per_v), likes per video (l_per_v) & comments per video (c_per_v). Although, I can't infer much here because it is difficult to understand the direction of association. In some sense, higher views will lead to more likes & comments, but I don't know how much of these likes & comments drive future views. To analyze this, I would need more granular data about evolution of views, likes & comments for a video over time which is not available with the public API.
 
 I am curious to see how l_per_v & c_per_v have evolved over the last few years.
 
-![likes & comments per video](/likes_comments.png)
+![likes & comments per video](/assets/images/huberman/likes_comments.png)
 
 Likes and comments per videos are bit on the lower side but it is not clear how much of this is just driven by decline in views and how much of this is because of the qualitative factors related to the video itself. Lastly, I want to look at how views per like and views per comments have evolved overtime in a cumulative fashion. I think this might tell me about the level of engagement of the vidoes.
 
-![ratio](/ratio.png)
+![ratio](/assets/images/huberman/ratio.png)
 
 Similar to cumulative views, there is a flattening & even a decline in the ratio of views to likes & views to comments. So for every like & comment a video is getting, the number of views it gets is dropping. This sounds like it could be algorithm driven as it is devaluing the likes & comments, hence it is not exposing the content to more people. There could be other factors like view through rates of a video or just vidoes becoming too niche that is driving it. Without access to more granular data and insights into operations of YT's algorithm it is difficult to be certain. The last factor could simply be that more people are listening to the podcast on other platforms & hence YT growth is stalling. Anyways, my initial hunch about Huberman videos getting lesser views compared to previous years seems valid.
